@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
+import NewCard from './components/NewCard';
+import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Article {
+    source: {
+        id: string | null;
+        name: string;
+    };
+    author: string | null;
+    title: string;
+    description: string;
+    url: string;
+    urlToImage: string | null;
+    publishedAt: string;
+    content: string;
 }
 
-export default App
+function App() {
+    const [articles, setArticles] = useState<Article[]>([]);
+
+    useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const response = await axios.get(`https://newsapi.org/v2/everything?q=tesla&from=2024-06-02&sortBy=publishedAt&apiKey=${import.meta.env.VITE_REACT_APP_NEWS_API_KEY}`);
+                setArticles(response.data.articles);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+
+        fetchNews().then(r => console.log(r));
+    }, []);
+
+    return (
+        <div>
+            <h1>Latest News</h1>
+            {articles.map((article, index) => (
+                <NewCard key={index} article={article} />
+            ))}
+        </div>
+    );
+}
+
+export default App;
