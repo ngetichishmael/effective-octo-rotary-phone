@@ -1,8 +1,3 @@
-Sure, Ish! Here’s a `README.md` file for your project:
-
-### `README.md`
-
-```markdown
 # News App
 
 A simple news application built with React and TypeScript, fetching news articles from the News API and displaying them in a clean and responsive layout using Tailwind CSS.
